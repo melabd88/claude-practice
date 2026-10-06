@@ -78,6 +78,45 @@ body {
   font-style: italic;
 }
 
+/* Category Selector */
+.category-selector {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.category-btn {
+  padding: 0.625rem 1.25rem;
+  border: 2px solid #e5e7eb;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  .category-btn {
+    border-color: #374151;
+  }
+}
+
+.category-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.category-btn.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
 /* Tiers */
 .tiers {
   margin-bottom: 3rem;
@@ -156,13 +195,11 @@ body {
   opacity: 0.5;
 }
 
-.chip-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
+.chip-logo {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -368,8 +405,11 @@ body {
   color: var(--color-text);
 }
 
-.modal-icon {
-  font-size: 3rem;
+.modal-logo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  object-fit: contain;
   margin-bottom: 1rem;
 }
 

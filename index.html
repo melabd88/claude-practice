@@ -16,6 +16,14 @@
       <div class="hint">→ Tap a concept to see what it is</div>
     </header>
 
+    <!-- Category Selector -->
+    <div class="category-selector">
+      <button class="category-btn active" data-category="systemdesign">System Design</button>
+      <button class="category-btn" data-category="watches">Watches</button>
+      <button class="category-btn" data-category="cars">Cars</button>
+      <button class="category-btn" data-category="films">Films</button>
+    </div>
+
     <!-- Tiers -->
     <main class="tiers">
       <div class="tier" data-tier="S">
@@ -51,8 +59,8 @@
     <!-- Controls -->
     <div class="controls">
       <button class="btn btn-secondary" id="reset-btn">Reset</button>
+      <button class="btn btn-secondary" id="shuffle-btn">Shuffle 10 New</button>
       <button class="btn btn-primary" id="download-btn">Download PNG</button>
-      <button class="btn btn-secondary" id="copy-btn" style="display: none;">Copy to Clipboard</button>
     </div>
   </div>
 
@@ -60,7 +68,7 @@
   <div class="modal" id="details-modal">
     <div class="modal-content">
       <button class="modal-close" id="modal-close">×</button>
-      <div class="modal-icon" id="modal-icon"></div>
+      <img id="modal-logo" alt="" class="modal-logo">
       <h2 id="modal-title"></h2>
       <p id="modal-description"></p>
     </div>
