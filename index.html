@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rank the system design stack</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="eyebrow">TOOL · FIG B</div>
+      <h1 class="headline">Rank the <span class="highlight">system design</span> stack.</h1>
+      <p class="subtitle">Drag each concept into a tier. When you're happy with it, download a shareable image or copy it to your clipboard.</p>
+      <div class="hint">→ Tap a concept to see what it is</div>
+    </header>
+
+    <!-- Tiers -->
+    <main class="tiers">
+      <div class="tier" data-tier="S">
+        <div class="tier-label" style="--tier-bg: #EF4444;">S</div>
+        <div class="tier-row" data-tier="S"></div>
+      </div>
+
+      <div class="tier" data-tier="A">
+        <div class="tier-label" style="--tier-bg: #F97316;">A</div>
+        <div class="tier-row" data-tier="A"></div>
+      </div>
+
+      <div class="tier" data-tier="B">
+        <div class="tier-label" style="--tier-bg: #EAAB04;">B</div>
+        <div class="tier-row" data-tier="B"></div>
+      </div>
+
+      <div class="tier" data-tier="C">
+        <div class="tier-label" style="--tier-bg: #22C55E;">C</div>
+        <div class="tier-row" data-tier="C"></div>
+      </div>
+    </main>
+
+    <!-- Unranked Tray -->
+    <div class="tray">
+      <div class="tray-label">UNRANKED</div>
+      <div class="tray-content">
+        <div class="chips-scroll" id="unranked-chips"></div>
+      </div>
+      <div class="tray-hint">Drag into a tier above ↑</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn btn-secondary" id="reset-btn">Reset</button>
+      <button class="btn btn-primary" id="download-btn">Download PNG</button>
+      <button class="btn btn-secondary" id="copy-btn" style="display: none;">Copy to Clipboard</button>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div class="modal" id="details-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">×</button>
+      <div class="modal-icon" id="modal-icon"></div>
+      <h2 id="modal-title"></h2>
+      <p id="modal-description"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
