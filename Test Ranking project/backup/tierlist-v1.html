@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rank the system design stack</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-bg: #f5f5f5;
+      --color-surface: #ffffff;
+      --color-text: #1f2937;
+      --color-text-light: #6b7280;
+      --color-primary: #3b82f6;
+      --color-primary-hover: #2563eb;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #1f2937;
+        --color-surface: #111827;
+        --color-text: #f3f4f6;
+        --color-text-light: #d1d5db;
+      }
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--color-text-light);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .headline .highlight {
+      color: var(--color-primary);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--color-text-light);
+      margin-bottom: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hint {
+      font-size: 0.875rem;
+      color: var(--color-text-light);
+      font-style: italic;
+    }
+
+    /* Tiers */
+    .tiers {
+      margin-bottom: 3rem;
+    }
+
+    .tier {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: stretch;
+    }
+
+    .tier-label {
+      flex-shrink: 0;
+      width: 4rem;
+      background-color: var(--tier-bg);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      border-radius: 0.5rem;
+    }
+
+    .tier-row {
+      flex: 1;
+      background: var(--color-surface);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-content: flex-start;
+      min-height: 5rem;
+      border: 2px dashed transparent;
+      transition: border-color 0.2s;
+    }
+
+    .tier-row.drag-over {
+      border-color: var(--color-primary);
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #e5e7eb;
+      color: var(--color-text);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      cursor: grab;
+      user-select: none;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .chip {
+        background: #374151;
+      }
+    }
+
+    .chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .chip:active {
+      cursor: grabbing;
+    }
+
+    .chip.dragging {
+      opacity: 0.5;
+    }
+
+    .chip-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .chip-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Tray */
+    .tray {
+      background: var(--color-surface);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-top: 2px solid #e5e7eb;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .tray {
+        border-top-color: #374151;
+      }
+    }
+
+    .tray-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--color-text-light);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .tray-content {
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+
+    .chips-scroll {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scroll-behavior: smooth;
+    }
+
+    .chips-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .chips-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chips-scroll::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .chips-scroll::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .chips-scroll::-webkit-scrollbar-thumb {
+        background: #4b5563;
+      }
+
+      .chips-scroll::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+      }
+    }
+
+    .tray-hint {
+      font-size: 0.75rem;
+      color: var(--color-text-light);
+      font-style: italic;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: var(--color-text);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-secondary {
+        background: #374151;
+        color: var(--color-text);
+      }
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-secondary:hover {
+        background: #4b5563;
+      }
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      background: var(--color-surface);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: slideUp 0.3s;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-text-light);
+      padding: 0;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: var(--color-text);
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-content p {
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.75rem;
+      }
+
+      .header {
+        margin-bottom: 2rem;
+      }
+
+      .headline {
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+      }
+
+      .tier {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .tier-label {
+        width: 100%;
+        border-radius: 0.375rem;
+      }
+
+      .tier-row {
+        min-height: 4rem;
+      }
+
+      .tray {
+        padding: 1rem;
+      }
+
+      .controls {
+        gap: 0.5rem;
+      }
+
+      .btn {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="eyebrow">TOOL · FIG B</div>
+      <h1 class="headline">Rank the <span class="highlight">system design</span> stack.</h1>
+      <p class="subtitle">Drag each concept into a tier. When you're happy with it, download a shareable image or copy it to your clipboard.</p>
+      <div class="hint">→ Tap a concept to see what it is</div>
+    </header>
+
+    <!-- Tiers -->
+    <main class="tiers">
+      <div class="tier" data-tier="S">
+        <div class="tier-label" style="--tier-bg: #EF4444;">S</div>
+        <div class="tier-row" data-tier="S"></div>
+      </div>
+
+      <div class="tier" data-tier="A">
+        <div class="tier-label" style="--tier-bg: #F97316;">A</div>
+        <div class="tier-row" data-tier="A"></div>
+      </div>
+
+      <div class="tier" data-tier="B">
+        <div class="tier-label" style="--tier-bg: #EAAB04;">B</div>
+        <div class="tier-row" data-tier="B"></div>
+      </div>
+
+      <div class="tier" data-tier="C">
+        <div class="tier-label" style="--tier-bg: #22C55E;">C</div>
+        <div class="tier-row" data-tier="C"></div>
+      </div>
+    </main>
+
+    <!-- Unranked Tray -->
+    <div class="tray">
+      <div class="tray-label">UNRANKED</div>
+      <div class="tray-content">
+        <div class="chips-scroll" id="unranked-chips"></div>
+      </div>
+      <div class="tray-hint">Drag into a tier above ↑</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn btn-secondary" id="reset-btn">Reset</button>
+      <button class="btn btn-primary" id="download-btn">Download PNG</button>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div class="modal" id="details-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">×</button>
+      <div class="modal-icon" id="modal-icon"></div>
+      <h2 id="modal-title"></h2>
+      <p id="modal-description"></p>
+    </div>
+  </div>
+
+  <script>
+    // Concepts data
+    const CONCEPTS = [
+      { id: 'graphql', name: 'GraphQL', icon: '📊', color: '#EC4899', description: 'Query language for APIs. Allows clients to request exactly the data they need, reducing over-fetching.' },
+      { id: 'microservices', name: 'Microservices', icon: '🔧', color: '#8B5CF6', description: 'Architectural style using small, independent services. Enables scalability but adds complexity.' },
+      { id: 'realtime', name: 'Real-time Architecture', icon: '⚡', color: '#F59E0B', description: 'Systems designed for low-latency, immediate data updates. Uses WebSockets, gRPC, or message queues.' },
+      { id: 'search', name: 'Search', icon: '🔍', color: '#6366F1', description: 'Full-text search capabilities using Elasticsearch, Algolia, or similar. Critical for discoverability.' },
+      { id: 'serverless', name: 'Serverless', icon: '☁️', color: '#10B981', description: 'Function-as-a-Service compute. Auto-scales but vendor lock-in and cold starts are concerns.' },
+      { id: 'storage', name: 'Object Storage', icon: '📦', color: '#3B82F6', description: 'Cloud storage like S3, GCS. Scalable and cost-effective for unstructured data.' },
+      { id: 'caching', name: 'Caching', icon: '💾', color: '#06B6D4', description: 'Reduce latency with Redis, Memcached, or CDN caching. Essential for performance at scale.' },
+      { id: 'loadbalancing', name: 'Load Balancing', icon: '⚖️', color: '#EF4444', description: 'Distribute traffic across multiple servers. Ensures availability and improves throughput.' },
+      { id: 'queues', name: 'Message Queues', icon: '📬', color: '#F97316', description: 'RabbitMQ, Kafka, SQS for async communication. Decouples services and handles spikes.' },
+      { id: 'cdn', name: 'CDN', icon: '🌐', color: '#6B7280', description: 'Content delivery network for fast static asset delivery globally.' },
+      { id: 'sharding', name: 'Sharding', icon: '🗂️', color: '#8B5CF6', description: 'Database partitioning strategy for horizontal scaling. Improves read/write throughput.' },
+      { id: 'ratelimit', name: 'Rate Limiting', icon: '🚦', color: '#FBBF24', description: 'Control request rates to prevent abuse and ensure fair usage.' },
+    ];
+
+    let state = {
+      chips: {},
+    };
+
+    // Initialize state from localStorage
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('tierlist-state');
+        if (saved) {
+          state = JSON.parse(saved);
+        } else {
+          CONCEPTS.forEach(concept => {
+            state.chips[concept.id] = null;
+          });
+        }
+      } catch (e) {
+        console.warn('Failed to load state:', e);
+        CONCEPTS.forEach(concept => {
+          state.chips[concept.id] = null;
+        });
+      }
+    }
+
+    // Save state to localStorage
+    function saveState() {
+      try {
+        localStorage.setItem('tierlist-state', JSON.stringify(state));
+      } catch (e) {
+        console.warn('Failed to save state:', e);
+      }
+    }
+
+    // Render all chips
+    function renderChips() {
+      const unrankedContainer = document.getElementById('unranked-chips');
+      unrankedContainer.innerHTML = '';
+
+      CONCEPTS.forEach(concept => {
+        const tier = state.chips[concept.id];
+        if (!tier) {
+          const chipEl = createChipElement(concept);
+          unrankedContainer.appendChild(chipEl);
+        }
+      });
+
+      document.querySelectorAll('.tier-row').forEach(tierRow => {
+        const tier = tierRow.dataset.tier;
+        tierRow.innerHTML = '';
+
+        CONCEPTS.forEach(concept => {
+          if (state.chips[concept.id] === tier) {
+            const chipEl = createChipElement(concept);
+            tierRow.appendChild(chipEl);
+          }
+        });
+      });
+    }
+
+    // Create a chip element
+    function createChipElement(concept) {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.draggable = true;
+      chip.dataset.conceptId = concept.id;
+      chip.innerHTML = `
+        <div class="chip-icon" style="background: ${concept.color}; border-radius: 50%; color: white; font-size: 0.75rem; width: 1.25rem; height: 1.25rem; display: flex; align-items: center; justify-content: center;">
+          ${concept.icon}
+        </div>
+        <span class="chip-text">${concept.name}</span>
+      `;
+
+      chip.addEventListener('dragstart', handleDragStart);
+      chip.addEventListener('dragend', handleDragEnd);
+      chip.addEventListener('click', (e) => {
+        if (!isDragging) {
+          showDetails(concept);
+        }
+      });
+
+      return chip;
+    }
+
+    let isDragging = false;
+    let draggedChip = null;
+
+    function handleDragStart(e) {
+      isDragging = true;
+      draggedChip = e.target.closest('.chip');
+      draggedChip.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', draggedChip.innerHTML);
+    }
+
+    function handleDragEnd(e) {
+      isDragging = false;
+      draggedChip?.classList.remove('dragging');
+      document.querySelectorAll('.tier-row, #unranked-chips').forEach(el => {
+        el.classList.remove('drag-over');
+      });
+    }
+
+    document.querySelectorAll('.tier-row').forEach(tierRow => {
+      tierRow.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        tierRow.classList.add('drag-over');
+      });
+
+      tierRow.addEventListener('dragleave', (e) => {
+        if (e.target === tierRow) {
+          tierRow.classList.remove('drag-over');
+        }
+      });
+
+      tierRow.addEventListener('drop', (e) => {
+        e.preventDefault();
+        tierRow.classList.remove('drag-over');
+        if (draggedChip) {
+          const conceptId = draggedChip.dataset.conceptId;
+          const tier = tierRow.dataset.tier;
+          state.chips[conceptId] = tier;
+          saveState();
+          renderChips();
+        }
+      });
+    });
+
+    document.getElementById('unranked-chips').addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
+
+    document.getElementById('unranked-chips').addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (draggedChip) {
+        const conceptId = draggedChip.dataset.conceptId;
+        state.chips[conceptId] = null;
+        saveState();
+        renderChips();
+      }
+    });
+
+    // Show details modal
+    function showDetails(concept) {
+      document.getElementById('modal-icon').textContent = concept.icon;
+      document.getElementById('modal-title').textContent = concept.name;
+      document.getElementById('modal-description').textContent = concept.description;
+      document.getElementById('details-modal').classList.add('active');
+    }
+
+    // Close modal
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('details-modal').classList.remove('active');
+    });
+
+    document.getElementById('details-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'details-modal') {
+        document.getElementById('details-modal').classList.remove('active');
+      }
+    });
+
+    // Reset button
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      if (confirm('Reset all rankings to unranked?')) {
+        CONCEPTS.forEach(concept => {
+          state.chips[concept.id] = null;
+        });
+        saveState();
+        renderChips();
+      }
+    });
+
+    // Download PNG
+    document.getElementById('download-btn').addEventListener('click', () => {
+      downloadAsImage();
+    });
+
+    function downloadAsImage() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const padding = 40;
+      const titleHeight = 120;
+      const tierHeight = 80;
+      const tierLabelWidth = 60;
+
+      const width = 1200;
+      const height = titleHeight + (4 * tierHeight) + (2 * padding);
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#1f2937';
+      ctx.font = 'bold 40px system-ui, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('Rank the system design stack', padding, padding + 40);
+
+      const tiers = ['S', 'A', 'B', 'C'];
+      const tierColors = ['#EF4444', '#F97316', '#EAAB04', '#22C55E'];
+
+      let y = titleHeight;
+
+      tiers.forEach((tier, index) => {
+        const color = tierColors[index];
+
+        ctx.fillStyle = color;
+        ctx.fillRect(padding, y, tierLabelWidth, tierHeight);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 48px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(tier, padding + tierLabelWidth / 2, y + tierHeight / 2);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(padding + tierLabelWidth + 20, y, width - padding * 2 - tierLabelWidth - 20, tierHeight);
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(padding + tierLabelWidth + 20, y, width - padding * 2 - tierLabelWidth - 20, tierHeight);
+
+        let chipX = padding + tierLabelWidth + 40;
+        let chipY = y + 20;
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#1f2937';
+
+        CONCEPTS.forEach(concept => {
+          if (state.chips[concept.id] === tier) {
+            ctx.fillStyle = '#e5e7eb';
+            ctx.beginPath();
+            ctx.roundRect(chipX, chipY, 120, 40, 20);
+            ctx.fill();
+
+            ctx.fillStyle = '#1f2937';
+            ctx.fillText(concept.icon + ' ' + concept.name, chipX + 10, chipY + 20);
+            chipX += 130;
+          }
+        });
+
+        y += tierHeight;
+      });
+
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'system-design-tier-list.png';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    // Initialize
+    loadState();
+    renderChips();
+  </script>
+</body>
+</html>
